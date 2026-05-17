@@ -1,6 +1,6 @@
 {
 	"name": "convert-case",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Small, dependency-free case converter for selected text.",
 	"private": true,
 	"license": "MIT",
