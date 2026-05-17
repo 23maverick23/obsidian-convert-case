@@ -1,0 +1,10 @@
+{
+	"id": "convert-case",
+	"name": "Convert case",
+	"version": "0.1.0",
+	"minAppVersion": "1.1.0",
+	"description": "Change selected text to familiar case styles with a small, dependency-free command set.",
+	"author": "Ryan Morrissey",
+	"authorUrl": "https://rymo.io",
+	"isDesktopOnly": false
+}
