@@ -1,6 +1,6 @@
 "use strict";
 
-const { Plugin } = require("obsidian");
+const { Notice, Plugin } = require("obsidian");
 
 const COMMANDS = [
 	{
@@ -52,12 +52,12 @@ class ConvertCasePlugin extends Plugin {
 				id: command.id,
 				name: command.name,
 				editorCheckCallback: (checking, editor) => {
-					if (!editor.somethingSelected()) {
-						return false;
+					if (checking) {
+						return true;
 					}
 
-					if (!checking) {
-						replaceSelections(editor, command.transform);
+					if (!replaceSelections(editor, command.transform)) {
+						new Notice("Select text to convert.");
 					}
 
 					return true;
@@ -267,6 +267,7 @@ module.exports = ConvertCasePlugin;
 if (typeof window === "undefined") {
 	module.exports.__test = {
 		extractWords,
+		COMMANDS,
 		toCamelCase,
 		toIdentifierCase,
 		toKebabCase,

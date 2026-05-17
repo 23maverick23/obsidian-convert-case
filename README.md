@@ -29,6 +29,16 @@ npm run check
 
 The plugin is intentionally no-build. Obsidian loads `main.js` directly.
 
+## Release
+
+Run the release bump helper:
+
+```bash
+npm run release:patch
+```
+
+Use `release:minor`, `release:major`, or `npm run release:bump -- 0.2.0` when needed. Then run the git commands printed by the helper. Pushing the tag starts the GitHub release workflow.
+
 ## License
 
 MIT

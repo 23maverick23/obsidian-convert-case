@@ -7,13 +7,31 @@ const test = require("node:test");
 const originalLoad = Module._load;
 Module._load = function load(request, parent, isMain) {
 	if (request === "obsidian") {
-		return { Plugin: class Plugin {} };
+		return {
+			Notice: class Notice {
+				constructor(message) {
+					Notice.messages = Notice.messages || [];
+					Notice.messages.push(message);
+				}
+			},
+			Plugin: class Plugin {
+				constructor() {
+					this.commands = [];
+				}
+
+				addCommand(command) {
+					this.commands.push(command);
+					return command;
+				}
+			},
+		};
 	}
 
 	return originalLoad.call(this, request, parent, isMain);
 };
 
-const { __test: convertCase } = require("../main.js");
+const ConvertCasePlugin = require("../main.js");
+const { __test: convertCase } = ConvertCasePlugin;
 Module._load = originalLoad;
 
 test("extractWords handles separators and camel boundaries", () => {
@@ -69,6 +87,23 @@ test("replaceSelections updates multiple selections and keeps converted text sel
 		},
 	]);
 	assert.equal(editor.focused, true);
+});
+
+test("commands remain visible in an active editor before text is selected", () => {
+	const plugin = new ConvertCasePlugin();
+	const editor = new FakeEditor("alpha beta", [
+		{
+			anchor: { line: 0, ch: 0 },
+			head: { line: 0, ch: 0 },
+		},
+	]);
+
+	plugin.onload();
+
+	assert.equal(plugin.commands.length, convertCase.COMMANDS.length);
+	assert.equal(plugin.commands[0].editorCheckCallback(true, editor), true);
+	assert.equal(plugin.commands[0].editorCheckCallback(false, editor), true);
+	assert.equal(editor.value, "alpha beta");
 });
 
 class FakeEditor {
